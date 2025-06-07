@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Course Recommendation</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f0f0f0;
+            padding: 50px;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            width: 60%;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        select[multiple] {
+            height: auto;
+            min-height: 150px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .results {
+            margin-top: 30px;
+        }
+
+        .results ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .results li {
+            background: #e0f7fa;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .refresh-btn {
+            background-color: #dc3545;
+            margin-top: 20px;
+            color: white;
+            font-weight: bold;
+        }
+
+        small {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📘 Personalized Course Recommender</h2>
+
+        {% if error %}
+            <p class="error">⚠️ {{ error }}</p>
+        {% endif %}
+
+        {% if recommendations %}
+            <div class="results">
+                <h3>🎯 Recommended Courses:</h3>
+                <ul>
+                    {% for i in range(recommendations|length) %}
+                        <li><strong>{{ recommendations[i] }}</strong> — Score: {{ "%.4f"|format(scores[i]) }}</li>
+                    {% endfor %}
+                </ul>
+
+                <!-- Refresh Button -->
+                <form method="GET">
+                    <button type="submit" class="refresh-btn">🔄 Refresh / Start Over</button>
+                </form>
+            </div>
+        {% else %}
+            <!-- Show form only when no recommendations yet -->
+            <form method="POST">
+                <label for="stream">Stream (e.g., CSE):</label>
+                <input type="text" name="stream" value="{{ request.form.get('stream', '') }}" required>
+
+                <label for="semester">Current Semester (1-6):</label>
+                <input type="number" name="semester" min="1" max="6" value="{{ request.form.get('semester', '') }}" required>
+
+                <label for="courses_taken">Select Courses Taken:</label>
+                <select name="courses_taken" id="courses_taken" multiple required>
+                    {% for course in all_courses %}
+                        <option value="{{ course }}" {% if course in selected_courses %}selected{% endif %}>{{ course }}</option>
+                    {% endfor %}
+                </select>
+                <small>Hold Ctrl (Windows) or Cmd (Mac) to select multiple courses.</small>
+
+                <button type="submit">Get Recommendations</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>
