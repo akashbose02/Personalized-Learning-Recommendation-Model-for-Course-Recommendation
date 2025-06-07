@@ -1,4 +1,5 @@
 # app.py
+import os
 from flask import Flask, render_template, request
 import pandas as pd
 from recommendations_system import hybrid_recommendation_for_new_user, course_features
@@ -37,4 +38,6 @@ def index():
                            selected_courses=selected_courses)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    #app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
