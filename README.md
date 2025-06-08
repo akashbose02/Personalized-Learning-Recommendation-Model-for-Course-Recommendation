@@ -13,4 +13,4 @@ Comparing the efficiency and results given by hybrid model (collaborative + cont
 
 Taking use of user preferences and content similarities to solve the cold-start issue.
 
-The deployed interface for this model : 
+The deployed interface for this model : https://personalized-learning-recommendation-03w6.onrender.com/
